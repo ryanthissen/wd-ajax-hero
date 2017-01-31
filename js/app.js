@@ -57,4 +57,31 @@
   };
 
   // ADD YOUR CODE HERE
+  let form = document.getElementsByTagName('form')[0];
+  let search = document.getElementById('search');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    let title = search.value;
+    let url = `http://www.omdbapi.com/?s=${title}&type=movie&y=&plot=short&r=json`
+    fetch(url)
+      .then(function(pObj) {
+        return pObj.json();
+      })
+      .then(function(jsonObj) {
+        return jsonObj.Search;
+      })
+      .then(function(search) {
+        for(let i = 0; i < search.length; i++) {
+          let newObj = {};
+            newObj.id = search[i].imdbID,
+            newObj.poster = search[i].Poster,
+            newObj.title = search[i].Title,
+            newObj.year = search[i].Year,
+            movies.push(newObj);
+            renderMovies();
+        }
+        movies.splice(0, movies.length);
+        form.reset();
+      });
+  })
 })();
